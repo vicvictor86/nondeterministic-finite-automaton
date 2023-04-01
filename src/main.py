@@ -1,27 +1,49 @@
 from NonDeterministAutomata import NFA
+from NonDeterministAutomata import from_txt
+from examples import *
 
-# nfa = NFA(["a", "b"], ["qo", "q1", "q2", "qf"], "q0", ["qf"])
-
-# nfa.addTransitions("q0", "a", ["q0", "q1"])
-# nfa.addTransitions("q0", "b", ["q0", "q2"])
-# nfa.addTransitions("q1", "a", ["qf"])
-# nfa.addTransitions("q2", "b", ["qf"])
-# nfa.addTransitions("qf", "a", ["qf"])
-# nfa.addTransitions("qf", "b", ["qf"])
-
-nfa = NFA(['0', '1'], ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'], "q1", ["q4"])
-
-transition_functions = {
-    ('q1', '0'): {'q1'},
-    ('q1', '1'): {'q1', 'q2'},
-    ('q2', '1'): {'q3'},
-    ('q3', '0'): {'q4'},
-    ('q4', '0'): {'q4'},
-    ('q4', '1'): {'q4'},
-}
-
-nfa.add_all_transitions(transition_functions)
-
-print(nfa.get_transitions())
-
-print(nfa.recognition("100100"))
+while True:
+    option = input("Choose an option: \n1 - Example 1\n2 - Example 2\n3 - Example 3\n4 - Example 4\n5 - Example 5\n6 - Load a new example for txt\n0 - Exit\nYour option: ")
+    if option == "0":
+        print("Exiting...")
+        break
+    else:
+        example = option
+        if example == "1":
+            nfae = example1()
+        elif example == "2":
+            nfae = example2()
+        elif example == "3":
+            nfae = example3()
+        elif example == "4":
+            nfae = example4()
+        elif example == "5":
+            nfae = example5()
+        elif example == "6":
+            file = input("File name: ")
+            try:
+                nfae = from_txt(file)
+            except Exception as e:
+                # print("Error while reading the file")
+                print(e)
+                continue
+        else:
+            print("\n-> Invalid option\n")
+            continue
+        
+        option = input("Choose an option: \n1 - Convert NFAE to NFA\n2 - Recognition\nYour option: ")
+        if option == "1":
+            print(f"NFAE: {nfae}")
+            print(f"  Transitions: {nfae.get_transitions()}")
+            nfa = nfae.convertNFAEtoNFA()
+            print(f"NFA: {nfa}")
+            print(f"  Transitions: {nfa.get_transitions()}")
+        elif option == "2":
+            if example != "4" and example != "5" and example != "6":
+                print("This example is not for recognition, please choose another one\n")
+            else:
+                word = input("Word: ")
+                print(f"\nReconhecimento da palavra {word}: {nfae.recognition(word)}\n")
+        else:
+            print("\n-> Invalid option\n")
+            continue
